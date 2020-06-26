@@ -29,5 +29,7 @@ jobs:
         run: npm run bundle
       - name: Link package
         run: npm link modify-via-query
+      - name: Check linked package
+        run: cat /opt/hostedtoolcache/node/12.18.1/x64/lib/node_modules/modify-via-query/dist/index.d.ts
       - name: Unit test
         run: npm test
