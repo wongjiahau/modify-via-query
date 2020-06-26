@@ -4,12 +4,12 @@
   "description": "Modify an object using query without mutating the original object.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "prepublish": "tsc",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "jest test/node.test.ts"
+    "test": "jest test/node.test.ts",
+    "bundle": "tsc"
   },
   "repository": {
     "type": "git",
