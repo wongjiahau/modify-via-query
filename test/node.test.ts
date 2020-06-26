@@ -3,7 +3,7 @@ import { testCases } from "./cases";
 
 describe("modify", () => {
   testCases({
-    modify: modify2,
+    modify: modify2 as any,
     assertReferentialEqual: (actual, expected) => {
       expect(actual === expected).toEqual(true);
     },
