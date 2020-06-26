@@ -1,6 +1,6 @@
 import { assert, assertEquals } from "./deps.ts";
 import { testCases } from "./cases.ts";
-import { modify2, modify } from "../src/index.ts";
+import { modify2, modify } from "../mod.ts";
 
 testCases({
   modify: modify2,

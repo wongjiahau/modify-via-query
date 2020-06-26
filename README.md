@@ -1,5 +1,6 @@
 # modify-via-query
-![](https://github.com/wongjiahau/immutability-helper-2/workflows/CI/badge.svg)
+![](https://github.com/wongjiahau/immutability-helper-2/workflows/deno/badge.svg)
+![](https://github.com/wongjiahau/immutability-helper-2/workflows/node/badge.svg)
 
 Mutate a copy of data without changing the original source with **natural and type-safe query**.
 
