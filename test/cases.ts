@@ -201,5 +201,29 @@ export const testCases = (
         assertStructuralEqual(modified1, { items: [{ content: "hi" }] });
       },
     },
+    {
+      name: "nested array",
+      body: () => {
+        const model = {
+          c: [{
+            d: [{
+              e: "yo",
+            }],
+          }],
+        };
+        const modified = modify(model)((model) =>
+          model.c[0].d.$apply((xs: any[]) => xs.concat({ e: "ha" }))
+        );
+        assertStructuralEqual(modified, {
+          c: [{
+            d: [{
+              e: "yo",
+            }, {
+              e: "ha",
+            }],
+          }],
+        });
+      },
+    },
   ];
 };

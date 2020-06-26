@@ -1,4 +1,4 @@
-import { modify } from "immutability-helper-two";
+import { modify } from "modify-via-query";
 import { testCases } from "./cases";
 
 describe("modify", () => {

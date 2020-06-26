@@ -1,6 +1,6 @@
 {
   "name": "modify-via-query",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Modify an object using query without mutating the original object.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wongjiahau/immutability-helper-2.git"
+    "url": "git+https://github.com/wongjiahau/modify-via-query.git"
   },
   "keywords": [
     "immutability",
@@ -24,9 +24,9 @@
   "author": "Wong Jia Hau",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wongjiahau/immutability-helper-2/issues"
+    "url": "https://github.com/wongjiahau/modify-via-query/issues"
   },
-  "homepage": "https://github.com/wongjiahau/immutability-helper-2#readme",
+  "homepage": "https://github.com/wongjiahau/modify-via-query#readme",
   "devDependencies": {
     "@types/jest": "^26.0.3",
     "jest": "^26.1.0",
