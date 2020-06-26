@@ -1,4 +1,4 @@
-import { modify } from "../src/main.ts";
+import { modify } from "../src/index.ts";
 import { assert, assertEquals } from "./deps.ts";
 
 const model = {

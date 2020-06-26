@@ -1,6 +1,6 @@
 type Command<Target, Parent> = {
-  $apply: (update: (value: Target) => Target) => Updatable<Parent, Parent>;
-  $set: (newValue: Target) => Updatable<Parent, Parent>;
+  $apply: (update: (value: Target) => Target) => Modifiable<Parent, Parent>;
+  $set: (newValue: Target) => Modifiable<Parent, Parent>;
 };
 
 type MakeAllPropsRequired<T> = NonNullable<
@@ -14,17 +14,17 @@ type IsNillableObject<T> = undefined extends T
   : never
   : never;
 
-export type Updatable<Target, Parent> =
+export type Modifiable<Target, Parent> =
   & {
     [Key in keyof Target]-?: Target[Key] extends Function ? Target[Key]
       : (
-        Target[Key] extends Array<infer E> ? Array<Updatable<E, Parent>>
+        Target[Key] extends Array<infer E> ? Array<Modifiable<E, Parent>>
           : "true" extends IsNillableObject<Target[Key]> ? {
             $default: (
               value: NonNullable<Target[Key]>,
-            ) => Updatable<NonNullable<Target[Key]>, Parent>;
+            ) => Modifiable<NonNullable<Target[Key]>, Parent>;
           }
-          : Target[Key] extends {} ? (Updatable<Target[Key], Parent>)
+          : Target[Key] extends {} ? (Modifiable<Target[Key], Parent>)
           : NonNullable<Target[Key]> & Command<Target[Key], Parent>
       );
   }
@@ -115,11 +115,14 @@ const handler = (initialState: any, props: string[]) => {
   };
 };
 
-const makeUpdatable = <T>(model: T): Updatable<T, T> => {
+const makeUpdatable = <T>(model: T): Modifiable<T, T> => {
   return new Proxy(model, handler(model, [])) as any;
 };
 
+/**
+ * Convert an object into `Updatable` 
+ */
 export const modify = <T>(model: T) =>
-  (updater: (model: Updatable<T, T>) => Updatable<T, T>): T => {
+  (updater: (model: Modifiable<T, T>) => Modifiable<T, T>): T => {
     return (updater(makeUpdatable(model)) as any)["$value"];
   };
