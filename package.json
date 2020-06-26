@@ -2,14 +2,14 @@
   "name": "immutability-helper-two",
   "version": "1.0.0",
   "description": "Natural and type-safe query to mutate a copy of data without changing the original source",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "prepublish": "tsc",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest test/node.test.ts"
   },
   "repository": {
     "type": "git",
@@ -26,5 +26,11 @@
   "bugs": {
     "url": "https://github.com/wongjiahau/immutability-helper-2/issues"
   },
-  "homepage": "https://github.com/wongjiahau/immutability-helper-2#readme"
+  "homepage": "https://github.com/wongjiahau/immutability-helper-2#readme",
+  "devDependencies": {
+    "@types/jest": "^26.0.3",
+    "jest": "^26.1.0",
+    "ts-jest": "^26.1.1",
+    "typescript": "^3.9.5"
+  }
 }

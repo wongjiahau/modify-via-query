@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: deno
+name: node
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -12,24 +12,22 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  format-check:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - uses: denolib/setup-deno@master
-        with:
-          deno-version: v1.1.1
-      - name: Format Check
-        run: |
-          deno fmt --check src
-          deno fmt --check test
-
   test:
     runs-on: ubuntu-latest
+    strategy:
+          matrix:
+            node-version: [8.x, 10.x, 12.x]
     steps:
       - uses: actions/checkout@master
-      - uses: denolib/setup-deno@master
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
         with:
-          deno-version: v1.1.1
+          node-version: ${{ matrix.node-version }}
+      - name: Install tsc
+        run: npm i -g typescript@3.9.5
+      - name: Compile package
+        run: tsc
+      - name: Link package
+        run: npm link immutability-helper-two
       - name: Unit test
-        run: deno test deno test test/deno.test.ts
+        run: npm test
