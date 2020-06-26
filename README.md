@@ -153,13 +153,13 @@ It works by using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScrip
 There are two variants being exported. If you are using React, the first variant `modify` will be more convenient.
 
 ```ts
-modify: (update: (state: Modifiable<State>) => Modifiable<State>) => (
-  state: State
-) => State;
+modify: (update: (state: Modifiable<State>) => Modifiable<State>) 
+  => (state: State) 
+  => State;
 
-modify2: (state: State) => (
-  update: (state: Modifiable<State>) => Modifiable<State>
-) => State;
+modify2: (state: State) 
+  => (update: (state: Modifiable<State>) => Modifiable<State>) 
+  => State;
 ```
 
 ## References
