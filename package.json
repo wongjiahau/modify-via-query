@@ -1,7 +1,7 @@
 {
-  "name": "immutability-helper-two",
+  "name": "modify-via-query",
   "version": "1.0.0",
-  "description": "Natural and type-safe query to mutate a copy of data without changing the original source",
+  "description": "Modify an object using query without mutating the original object.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "prepublish": "tsc",

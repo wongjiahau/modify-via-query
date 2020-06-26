@@ -17,20 +17,21 @@ export const testCases = (
   }: {
     assertStructuralEqual: <T>(actual: T, expected: T) => void;
     assertReferentialEqual: <T>(actual: T, expected: T) => void;
-    modify: <T>(model: T) =>  (f: (modifiable: any) => any) => T
+    modify: <T>(model: T) => (f: (modifiable: any) => any) => T;
   },
 ): {
   name: string;
   body: () => void;
 }[] => {
-
   const m = modify(originalModel);
 
   return [
     {
       name: "updatable (assert not deep cloned)",
       body: () => {
-        const modified = m((model) => model.name.$apply((x: string) => x + " world"));
+        const modified = m((model) =>
+          model.name.$apply((x: string) => x + " world")
+        );
         assertReferentialEqual(originalModel.items, modified.items);
         assertReferentialEqual(originalModel.job, modified.job);
         assertStructuralEqual(modified.name, "hello world");
@@ -66,7 +67,9 @@ export const testCases = (
     {
       name: "updatable (array item)",
       body: () => {
-        const modified = m((model) => model.items[1].x.$apply((x: number) => x * x));
+        const modified = m((model) =>
+          model.items[1].x.$apply((x: number) => x * x)
+        );
         assertStructuralEqual(modified.items, [{ x: 1 }, { x: 4 }]);
       },
     },
@@ -74,7 +77,10 @@ export const testCases = (
       name: "updatable (out-of-bound array item)",
       body: () => {
         const modified = m((model) => model.items[3].x.$apply(() => 99));
-        assertStructuralEqual(modified.items, [{ x: 1 }, { x: 2 }, , { x: 99 }]);
+        assertStructuralEqual(
+          modified.items,
+          [{ x: 1 }, { x: 2 }, , { x: 99 }],
+        );
       },
     },
     {
@@ -168,12 +174,18 @@ export const testCases = (
         const modified1 = modify(model1)((model) =>
           model.x.$default({ z: 3 }).y.$default({ a: 1 }).b.$set(false)
         );
-        assertStructuralEqual(modified1, { x: { z: 3, y: { a: 1, b: false } } });
+        assertStructuralEqual(
+          modified1,
+          { x: { z: 3, y: { a: 1, b: false } } },
+        );
         const model2: Model = { x: { y: { a: 8 }, z: 5 } };
         const modified2 = modify(model2)((model) =>
           model.x.$default({ z: 3 }).y.$default({ a: 1 }).b.$set(false)
         );
-        assertStructuralEqual(modified2, { x: { z: 5, y: { a: 8, b: false } } });
+        assertStructuralEqual(
+          modified2,
+          { x: { z: 5, y: { a: 8, b: false } } },
+        );
       },
     },
     {
@@ -189,5 +201,5 @@ export const testCases = (
         assertStructuralEqual(modified1, { items: [{ content: "hi" }] });
       },
     },
-  ]
+  ];
 };

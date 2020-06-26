@@ -1,4 +1,4 @@
-const {modify}  = require('immutability-helper-two')
+const { modify } = require("immutability-helper-two");
 
 const model = {
   name: "hello",
