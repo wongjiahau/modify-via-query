@@ -139,6 +139,43 @@ This tells the library that if `pet` is undefined, then its name will be `"bibi"
 - `$default`
   - to provide a default value if the queried property is a nullable object
 
+## Comparison with immutability-helper
+Using immutability-helper, taken from [this issue](https://github.com/kolodny/immutability-helper/issues/71):
+```ts
+update(state, {
+  objects: {
+    [resource]: {
+      [id]: {
+        relationships: {
+          [action.relationship]: {
+            data: {
+              $apply: data => {
+                const { id, type } = response.data;
+                const ref = { id, type };
+                return data == null ? [ref] : [...data, ref];
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+});
+```
+Using modify-via-query:
+```ts
+modify(state => state
+  .objects[resource][id]
+  .relationships[action.relationship]
+  .data
+  .$apply(data => {
+    const { id, type } = response.data;
+    const ref = { id, type };
+    return data == null ? [ref] : [...data, ref];
+  })
+)(state)
+```
+
 ## Can I use this library in non-React projects?
 Yes. Although this library is primarily for users who uses React users, this package can actually be used anywhere since it has zero dependency.
 
