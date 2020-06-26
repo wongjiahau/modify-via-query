@@ -1,6 +1,6 @@
 {
   "name": "modify-via-query",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Modify an object using query without mutating the original object.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -17,6 +17,9 @@
   },
   "keywords": [
     "immutability",
+    "modify",
+    "mutate",
+    "query",
     "react",
     "redux",
     "natural"

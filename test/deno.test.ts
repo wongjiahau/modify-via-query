@@ -1,9 +1,9 @@
 import { assert, assertEquals } from "./deps.ts";
 import { testCases } from "./cases.ts";
-import { modify, modify2 } from "../src/index.ts";
+import { modify2, modify } from "../src/index.ts";
 
 testCases({
-  modify,
+  modify: modify2,
   assertReferentialEqual: (actual, expected) => assert(actual === expected),
   assertStructuralEqual: (actual, expected) => assertEquals(actual, expected),
 })
@@ -23,7 +23,7 @@ Deno.test("nested array in Deno", () => {
     return u(model);
   };
   const modified = f(
-    modify2((model) => model.c[0].d.$apply((xs) => xs.concat({ e: "ha" }))),
+    modify((model) => model.c[0].d.$apply((xs) => xs.concat({ e: "ha" }))),
   );
   assertEquals(modified, {
     c: [{
