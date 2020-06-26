@@ -32,4 +32,4 @@ jobs:
         with:
           deno-version: v1.1.1
       - name: Unit test
-        run: deno test
+        run: deno test test/deno.test.ts

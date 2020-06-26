@@ -18,7 +18,8 @@ export type Modifiable<Target, Parent> =
   & {
     [Key in keyof Target]-?: Target[Key] extends Function ? Target[Key]
       : (
-        Target[Key] extends Array<infer E> ? Array<Modifiable<E, Parent>>
+        Target[Key] extends Array<infer E>
+          ? (Array<Modifiable<E, Parent>> & Command<Target[Key], Parent>)
           : "true" extends IsNillableObject<Target[Key]> ? {
             $default: (
               value: NonNullable<Target[Key]>,
@@ -122,7 +123,15 @@ const makeUpdatable = <T>(model: T): Modifiable<T, T> => {
 /**
  * Convert an object into `Updatable` 
  */
-export const modify = <T>(model: T) =>
+export const modify2 = <T>(model: T) =>
   (updater: (model: Modifiable<T, T>) => Modifiable<T, T>): T => {
     return (updater(makeUpdatable(model)) as any)["$value"];
   };
+
+export const modify = <T>(
+  update: (model: Modifiable<T, T>) => Modifiable<T, T>,
+): (model: T) => T => {
+  return (model) => {
+    return (update(makeUpdatable(model)) as any)["$value"];
+  };
+};
