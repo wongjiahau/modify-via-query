@@ -24,7 +24,7 @@ export type Modifiable<Target, Parent> =
             $default: (
               value: NonNullable<Target[Key]>,
             ) => Modifiable<NonNullable<Target[Key]>, Parent>;
-          }
+          } & Command<Target[Key], Parent>
           : Target[Key] extends {} ? (Modifiable<Target[Key], Parent>)
           : NonNullable<Target[Key]> & Command<Target[Key], Parent>
       );

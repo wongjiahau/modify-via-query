@@ -11,7 +11,7 @@ testCases({
     Deno.test(testCase.name, testCase.body);
   });
 
-Deno.test("nested array in Deno", () => {
+Deno.test("deno: nested array", () => {
   const model = {
     c: [{
       d: [{
@@ -34,4 +34,27 @@ Deno.test("nested array in Deno", () => {
       }],
     }],
   });
+});
+
+Deno.test("deno: updating nullable property", () => {
+  const model: { items: ({ x?: { y?: string } } | undefined)[] } = {
+    items: [],
+  };
+  const modified1 = modify2(model)((model) => model.items[0].x.$set(undefined));
+  assertEquals(modified1, { items: [{ x: undefined }] });
+
+  const modified2 = modify2(model)((model) =>
+    model.items[0].x.$set({ y: "hi" })
+  );
+  assertEquals(modified2, { items: [{ x: { y: "hi" } }] });
+
+  const modified3 = modify2(model)((model) =>
+    model.items[0].x.$apply((x) => ({ ...x, y: x?.y ?? "lol" }))
+  );
+  assertEquals(modified3, { items: [{ x: { y: "lol" } }] });
+
+  const modified4 = modify2<typeof model>({ items: [{ x: { y: "hey" } }] })((
+    model,
+  ) => model.items[0].x.$apply((x) => ({ ...x, y: x?.y ?? "lol" })));
+  assertEquals(modified4, { items: [{ x: { y: "hey" } }] });
 });
