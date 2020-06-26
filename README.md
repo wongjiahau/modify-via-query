@@ -101,6 +101,14 @@ modify(state => state
 // { name: "spongebob squarepants", job: {title: "chef", at: "Krabby Patty"} }
 ```
 
+### Removing array item
+```ts
+modify(state => state.filter((_, index) => index !== 2))(
+  ["a", "b", "c"]
+)
+// ["a", "b"]
+```
+
 ## Modify property of optional object
 For example, if you have the following state:
 ```ts
@@ -123,6 +131,14 @@ modify(state => state.pet.$default({name: "bibi"}).age.$set(9))(state)
 ```
 This tells the library that if `pet` is undefined, then its name will be `"bibi"` otherwise the original name will be used.  
 
+## Available commands
+- `$set`
+  - to set the value of the queried property
+- `$apply`
+  - to update the value of the queried property based on its previous value
+- `$default`
+  - to provide a default value if the queried property is a nullable object
+
 ## Can I use this library in non-React projects?
 Yes. Although this library is primarily for users who uses React users, this package can actually be used anywhere since it has zero dependency.
 
@@ -131,6 +147,7 @@ Yes! In fact the default package already contain the type definitions, so you do
 
 ## How this library works?
 It works by using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
+
 
 ## Variants
 There are two variants being exported. If you are using React, the first variant `modify` will be more convenient.
