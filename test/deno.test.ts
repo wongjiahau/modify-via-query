@@ -1,9 +1,9 @@
 import { assert, assertEquals } from "./deps.ts";
 import { testCases } from "./cases.ts";
-import { modify2, modify } from "../mod.ts";
+import { modify } from "../mod.ts";
 
 testCases({
-  modify: modify2,
+  modify,
   assertReferentialEqual: (actual, expected) => assert(actual === expected),
   assertStructuralEqual: (actual, expected) => assertEquals(actual, expected),
 })
@@ -40,21 +40,42 @@ Deno.test("deno: updating nullable property", () => {
   const model: { items: ({ x?: { y?: string } } | undefined)[] } = {
     items: [],
   };
-  const modified1 = modify2(model)((model) => model.items[0].x.$set(undefined));
+  const modified1 = modify(model)((model) => model.items[0].x.$set(undefined));
   assertEquals(modified1, { items: [{ x: undefined }] });
 
-  const modified2 = modify2(model)((model) =>
+  const modified2 = modify(model)((model) =>
     model.items[0].x.$set({ y: "hi" })
   );
   assertEquals(modified2, { items: [{ x: { y: "hi" } }] });
 
-  const modified3 = modify2(model)((model) =>
+  const modified3 = modify(model)((model) =>
     model.items[0].x.$apply((x) => ({ ...x, y: x?.y ?? "lol" }))
   );
   assertEquals(modified3, { items: [{ x: { y: "lol" } }] });
 
-  const modified4 = modify2<typeof model>({ items: [{ x: { y: "hey" } }] })((
+  const modified4 = modify<typeof model>({ items: [{ x: { y: "hey" } }] })((
     model,
   ) => model.items[0].x.$apply((x) => ({ ...x, y: x?.y ?? "lol" })));
   assertEquals(modified4, { items: [{ x: { y: "hey" } }] });
+});
+
+Deno.test("deno: overloaded variations", () => {
+  const model = {
+    x: {
+      y: [{ z: 2 }],
+    },
+  };
+
+  // Variant 1: model -> update -> model
+  assertEquals(modify(model)((model) => model.x.y[0].z.$apply((x) => x + 1)), {
+    x: { y: [{ z: 3 }] },
+  });
+
+  // Variant 2: update -> model -> model
+  assertEquals(
+    modify<typeof model>((model) => model.x.y[0].z.$apply((x) => x + 1))(model),
+    {
+      x: { y: [{ z: 3 }] },
+    },
+  );
 });

@@ -177,6 +177,51 @@ This tells the library that if `pet` is undefined, then its name will be `"bibi"
 - `$default`
   - to provide a default value if the queried property is a nullable object
 
+## Usage with React
+### Function components (useState hook)
+```ts
+const Counter = () => {
+  const [state, setState] = React.useState({count: 0})
+  const add = () => setState(modify(state => state.count.$apply(x => x + 1)))
+  const minus = () => setState(modify(state => state.count.$apply(x => x - 1)))
+  return (...)
+}
+```
+
+### Class components
+```ts
+class Counter extends React.Component<{}, {count: 0}> {
+  constructor(props) => {
+    super(props)
+    this.state = {count: 0}
+  }
+  add = () => {
+    this.setState(modify(state => state.count.$apply(x => x + 1)))
+  }
+  minus = () => {
+    this.setState(modify(state => state.count.$apply(x => x - 1)))
+  }
+}
+```
+
+### Redux reducers
+```ts
+type State = {count: 0}
+type Action = {type: 'add'} | {type: 'minus'}
+const myReducer = (state: State, action: Action): State => {
+  return modify(state)(state => {
+    switch(action.type) {
+      case 'add':
+        return state.count.$apply(x => x + 1)
+      
+      case 'minus':
+        return state.count.$apply(x => x - 1)
+    }
+  })
+}
+```
+
+
 ## Can I use this library in non-React projects?
 Yes. Although this library is primarily for users who uses React users, this package can actually be used anywhere since it has zero dependency.
 
@@ -187,15 +232,17 @@ Yes! In fact the default package already contain the type definitions, so you do
 It works by using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy)
 
 
-## Variants
-There are two variants being exported. If you are using React, the first variant `modify` will be more convenient.
+## Overloads
+The `modify` function is overloaded with two signatures. If you are using React, the first variant will be more convenient. Note that both of the variants can be curried.
 
 ```ts
+// Update -> State -> State
 modify: (update: (state: Modifiable<State>) => Modifiable<State>) 
   => (state: State) 
   => State;
 
-modify2: (state: State) 
+// State -> Update -> State
+modify: (state: State) 
   => (update: (state: Modifiable<State>) => Modifiable<State>) 
   => State;
 ```
