@@ -121,17 +121,65 @@ const makeUpdatable = <T>(model: T): Modifiable<T, T> => {
 };
 
 /**
- * Convert an object into `Updatable` 
+ * Variant 1:
+ * ```
+ * State => Update => State
+ * ```
+ * 
+ * Example:
+ * ```ts
+ * modify(state)(state => state.count.$set(1))
+ * ```
+ * 
+ * Can be curried, for example:
+ * ```ts
+ * const m = modify({count: 0})
+ * const add = m(state => state.count.$apply(x => x + 1))
+ * const minus = m(state => state.count.$apply(x => x - 1))
+ * ```
  */
-export const modify2 = <T>(model: T) =>
-  (updater: (model: Modifiable<T, T>) => Modifiable<T, T>): T => {
-    return (updater(makeUpdatable(model)) as any)["$value"];
-  };
+export function modify<T>(
+  state: T,
+): (update: (state: Modifiable<T, T>) => Modifiable<T, T>) => T;
 
-export const modify = <T>(
-  update: (model: Modifiable<T, T>) => Modifiable<T, T>,
-): (model: T) => T => {
-  return (model) => {
-    return (update(makeUpdatable(model)) as any)["$value"];
-  };
-};
+/**
+ * Variant 2:
+ * ```
+ * Update => State => State
+ * ```
+ * 
+ * Example:
+ * ```ts
+ * modify(state => state.count.$set(1))(state)
+ * ```
+ * 
+ * This variant is useful when used with function that takes 
+ * a function with the type of `State -> State`. Example of such function is `setState` or `this.setState` of React.  
+ * Usage example:
+ * ```ts
+ * const [state, setState] = React.useState({count: 0})
+ * const add = () => setState(
+ *  modify(state => state.count.$apply(x => x + 1))
+ * )
+ * const minus = () => setState(
+ *  modify(state => state.count.$apply(x => x - 1))
+ * )
+ * ```
+ */
+export function modify<T>(
+  update: (state: Modifiable<T, T>) => Modifiable<T, T>,
+): (state: T) => T;
+
+export function modify<T>(
+  updateOrModel: any,
+) {
+  if (typeof updateOrModel === "function") {
+    return (model: T) => {
+      return (updateOrModel(makeUpdatable(model)) as any)["$value"];
+    };
+  } else {
+    return (update: (model: Modifiable<T, T>) => Modifiable<T, T>) => {
+      return (update(makeUpdatable<T>(updateOrModel)) as any)["$value"];
+    };
+  }
+}

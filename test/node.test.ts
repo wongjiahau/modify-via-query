@@ -1,9 +1,9 @@
-import { modify2 } from "modify-via-query";
+import { modify } from "modify-via-query";
 import { testCases } from "./cases";
 
 describe("modify", () => {
   testCases({
-    modify: modify2,
+    modify,
     assertReferentialEqual: (actual, expected) => {
       expect(actual === expected).toEqual(true);
     },
@@ -17,7 +17,7 @@ describe("modify", () => {
 
   test("nested property", () => {
     const model = { x: { y: 2 } };
-    expect(modify2(model)((model) => model.x.y.$set(3))).toEqual(
+    expect(modify(model)((model) => model.x.y.$set(3))).toEqual(
       { x: { y: 3 } },
     );
   });
